@@ -2,7 +2,7 @@
     import Input from "../lib/Input.svelte";
     import Link from "../lib/Link.svelte";
     import { pushPassage } from "../lib/svine/stores/passage";
-    import { playerName } from "./state/test";
+    import { playerName } from "./state/player";
 </script>
 
 <div class="flex flex-col gap-3 w-full">

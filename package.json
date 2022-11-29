@@ -19,6 +19,7 @@
     "vite": "^3.2.3"
   },
   "dependencies": {
-    "svine": "^0.0.1"
+    "@macfja/svelte-persistent-store": "^2.2.1",
+    "node-dir": "^0.1.17"
   }
 }
