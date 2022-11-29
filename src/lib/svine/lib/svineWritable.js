@@ -1,7 +1,10 @@
-import { createLocalStorage } from "@macfja/svelte-persistent-store";
+import { createLocalStorage, setSerialization } from "@macfja/svelte-persistent-store";
 import { persist } from "@macfja/svelte-persistent-store";
 import { writable } from "svelte/store";
 import { onPushPassage, onRedo, onRestart, onUndo } from "../stores/passage";
+import { onLoad } from "../stores/save";
+
+setSerialization((data) => JSON.stringify(data), (input) => JSON.parse(input));
 
 export function svineWritable(initial, key = null) {
     const shouldPersist = import.meta.env.PROD && key;
@@ -46,7 +49,7 @@ export function svineWritable(initial, key = null) {
         const undoIndexValue = getCurrentUndoIndexAtom();
         const nextUndoIndex = undoIndexValue + 1;
         undoIndexAtom.set(nextUndoIndex);
-        atom.set(historyAtomValue[historyAtomValue.length - nextUndoIndex]);
+        atom.set(historyAtomValue[historyAtomValue.length - 1 - nextUndoIndex]);
     });
 
     onRedo(() => {
@@ -59,9 +62,18 @@ export function svineWritable(initial, key = null) {
 
     onRestart(() => {
         undoIndexAtom.set(0);
-        historyAtom.set([]);
+        historyAtom.set([initial]);
         passageBoundAtom.set(initial);
         atom.set(initial);
+    })
+
+    onLoad((value) => {
+        const { history, undoIndex } = value
+        const currentValue = history[history.length - 1 - undoIndex]
+        undoIndexAtom.set(undoIndex);
+        historyAtom.set(history);
+        passageBoundAtom.set(currentValue);
+        atom.set(currentValue);
     })
 
     undoIndexAtom.subscribe((index) => {

@@ -27,14 +27,16 @@ function buildPersist(storage, key) {
     };
 }
 
+export const undoIndexKey = 'passage-undoIndex'
+export const passageHistoryKey = 'passage-history'
 export const { undoIndex, passageHistory, currentPassage } = import.meta.env.DEV ?
     buildAtoms(
         (atom) => atom,
         (atom) => atom
     ) :
     buildAtoms(
-        buildPersist(createLocalStorage, 'svine-passageUndoIndex'),
-        buildPersist(createComponentListLocalStorage, 'svine-passageHistory')
+        buildPersist(createLocalStorage, undoIndexKey),
+        buildPersist(createComponentListLocalStorage, passageHistoryKey)
     );
 
 function getCurrentUndoIndex() {

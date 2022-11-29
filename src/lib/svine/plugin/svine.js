@@ -5,13 +5,13 @@ export function svine({ dev }) {
     const resolvedVirtualModuleId = '\0' + virtualModuleId;
 
     const passageImportRecords = dir
-        .files('./src/story', { sync: true })
-        .filter(path => path.endsWith('.svelte'))
+        .files('.\\src\\story', { sync: true })
+        .filter(path => path.endsWith('.svelte') || path.endsWith('.md'))
         .map(path => ({
             name: path
-                .split("/").at(-1)
+                .split("\\").at(-1)
                 .split('.').at(0),
-            path: `/${path}`
+            path: `\\${path}`.replaceAll('\\', '/')
         }));
 
     let imports = passageImportRecords.map(record => `import ${record.name} from "${record.path}"`);
